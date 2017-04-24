@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Sldify解决中文乱码
-tags: R
+categories: R
 date: 2014-11-29
 ---
 

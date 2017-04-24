@@ -2,7 +2,7 @@
 layout: post
 title: "在knitr里面使用REmap"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: R
+categories: R
 date: 2015-10-27
 ---
 
@@ -11,53 +11,59 @@ date: 2015-10-27
 
 
 
-<p>这两天处理了REmap里面遗留的一个功能框架—-knitr,感谢周扬大大提醒我最新的htmltools,补全了最后一块拼图</p>
-<br/>
-<p>首先需要安装最新版的htmltools</p>
-<br/>
-<pre class="r"><code>devtools::install_github("rstudio/htmltools")</code></pre><br/>
-<p>接下来,就可以开始我们的knitr之旅了,别忘了Chorme浏览器...</p>
-<div class="section level3">
-<h3>基本情况</h3>
-<p>目前REmap的knitr支持情况如下:</p>
-<ul>
-<li>remapC,remapB,remapH,remap四个函数均支持knitr生成html报告的直接嵌入</li>
-<li>Linux和Mac下中文字体没有问题</li>
-<li>windows下remapC的<code>maptype</code><strong>可以用拼音代替</strong>
-<ul>
-<li>陕西用<code>shanxi1</code></li>
-<li>山西用<code>shanxi2</code></li>
-</ul></li>
-<li>windows下不要用中文的标题</li>
-</ul>
-</div>
-<div class="section level3">
-<h3>使用方式</h3>
-<ul>
-<li>在加载REmap之后用<code>remap.init()</code>初始化knitr中JS的依赖包
-<ul>
-<li><strong>只需要加载一次</strong></li>
-</ul></li>
-<li>绘制的remap对象保存在一个对象中</li>
-<li>最后用<code>knitrREmap</code>来进行绘制(可用其中的参数调整长宽)</li>
-<li>移植到自己blog的话,记得把JS文件拷走…</li>
-</ul>
-<p>以下是示例部分</p>
-<div id="remap" class="section level4">
-<h4><em>remap</em>函数</h4>
-<pre class="r"><code>library(REmap)
+这两天处理了REmap里面遗留的一个功能框架—-knitr,感谢周扬大大提醒我最新的htmltools,补全了最后一块拼图</p>
+
+首先需要安装最新版的htmltools
+```r
+devtools::install_github("rstudio/htmltools")
+```
+接下来,就可以开始我们的knitr之旅了,别忘了Chorme浏览器...
+
+### 基本情况
+目前REmap的knitr支持情况如下:
+
+- remapC,remapB,remapH,remap四个函数均支持knitr生成html报告的直接嵌入
+- Linux和Mac下中文字体没有问题
+- windows下remapC的`maptype`**可以用拼音代替**
+  - 陕西用`shanxi1`
+  - 山西用`shanxi2`
+- windows下不要用中文的标题
+
+
+
+### 使用方式
+
+- 在加载REmap之后用`remap.init()`初始化knitr中JS的依赖包
+- **只需要加载一次**
+
+- 绘制的remap对象保存在一个对象中
+- 最后用`knitrREmap`来进行绘制(可用其中的参数调整长宽)
+- 移植到自己blog的话,记得把JS文件拷走…
+
+以下是示例部分
+
+
+#### *remap*函数
+
+```r
+library(REmap)
 ## 加载依赖
-remap.init()</code></pre>
-<p><script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+remap.init()
+```
+<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
 <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<script type="text/javascript" src="http://lchiffon.github.io/reveal_slidify/echarts/require/main.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&amp;ak=q9U1lWgCK1aBGVC1DVWrgWa7"></script>
-<script type="text/javascript" src="http://echarts.baidu.com/doc/asset/js/jquery.min.js"></script></p>
-<pre class="r"><code>## 绘制地图
+<script type="text/javascript" src="http://echarts.baidu.com/doc/asset/js/jquery.min.js"></script>
+
+```r
+## 绘制地图
 p = remap(demoC)
 ## knitr展示
-knitrREmap(p,local=F)</code></pre>
-<p><div id="ID_20151027142224_129" style="height:300px; width:100%"></div>
-<script>  var myChart = echarts.init(document.getElementById("ID_20151027142224_129"));
+knitrREmap(p,local=F)
+```
+<div id="ID_20151027142224_129" style="height:300px; width:100%"></div>
+<script>  var myChart = echarts.init(document.getElementById('ID_20151027142224_129'));
 
                        var options = {
   backgroundColor: '#1b1b1b',
@@ -184,104 +190,111 @@ knitrREmap(p,local=F)</code></pre>
   }
   ]
   };
-  myChart.setOption(options);	</script></p>
-</div>
-<div id="remapc" class="section level4">
-<h4><em>remapC</em>函数</h4>
-<pre class="r"><code>## 绘制地图
+  myChart.setOption(options);	</script>
+
+
+#### *remapC*函数
+
+```
+## 绘制地图
 data = data.frame(country = mapNames(&quot;xizang&quot;),
                    value = 5*sample(7)+200)
 
 p = remapC(data,maptype = &quot;xizang&quot;,color = 'skyblue')
 ## knitr展示
-knitrREmap(p)</code></pre>
-<p><div id="ID_20151027142224_137" style="height:300px; width:100%"></div>
-<script>  var myChart = echarts.init(document.getElementById("ID_20151027142224_137"));
+knitrREmap(p)
+```
 
-                       var options = {
-  backgroundColor: '#D9D9D9',
-  color: ['gold','aqua','lime'],
-  title : {
-    text: '',
-    subtext:'',
-    x:'center',
-    textStyle : {
-      color: '#1b1b1b'
-    }
-  },
-  tooltip : {
-    trigger: 'item',
-    formatter: function (v) {
-			if(typeof(v[2])=='number'){
-			return(v[1]+': '+v[2])
-			}else if(v[2].tooltipValue!=null){
-          	return v[2].tooltipValue;
-          }else{
-            return v[1];
-          }
-  }},
-    legend: {
-        show:false,
-        orient: 'vertical',
-        x:'left',
-        data:['Data'],
-      	textStyle:{color:'#D9D9D9'}
 
+<div id="ID_20151027142224_137" style="height:300px; width:100%"></div>
+<script>  var myChart = echarts.init(document.getElementById('ID_20151027142224_137'));
+
+                         var options ={
+    backgroundColor: '#D9D9D9',
+    color: ['gold','aqua','lime'],
+    title : {
+      text: '',
+      subtext:'',
+      x:'center',
+      textStyle : {
+        color: '#1b1b1b'
+      }
     },
-  toolbox: {
-    show : true,
-    orient : 'vertical',
-    x: 'right',
-    y: 'center',
-    feature : {
-      mark : {show: true},
-      dataView : {show: true, readOnly: false},
-      restore : {show: true},
-      saveAsImage : {show: true}
-    }
-  },
-  dataRange: {
-    min : 203,
-    max : 237,
-    calculable : true,
-    color: ['skyblue', 'white'],
-    textStyle:{
-      color:'#1b1b1b'
-    }
-  },
-  series : [
-    {
-    name:'Data',
-    type:'map',
-    mapType: '西藏',
-    itemStyle:{
-    normal:{
-    borderColor:'rgba(100,149,237,1)',
-    borderWidth: 0.5,
-    label:{show:true,textStyle:{color:'#1b1b1b'}},
+    tooltip : {
+      trigger: 'item',
+      formatter: function (v) {
+  			if(typeof(v[2])=='number'){
+  			return(v[1]+': '+v[2])
+  			}else if(v[2].tooltipValue!=null){
+            	return v[2].tooltipValue;
+            }else{
+              return v[1];
+            }
+    }},
+      legend: {
+          show:false,
+          orient: 'vertical',
+          x:'left',
+          data:['Data'],
+        	textStyle:{color:'#D9D9D9'}
+
+      },
+    toolbox: {
+      show : true,
+      orient : 'vertical',
+      x: 'right',
+      y: 'center',
+      feature : {
+        mark : {show: true},
+        dataView : {show: true, readOnly: false},
+        restore : {show: true},
+        saveAsImage : {show: true}
+      }
     },
-    emphasis:{label:{show:true,textStyle:{color:'#1b1b1b'}}}
-  },
-  data:[{name:'那曲地区',value:220},
-		{name:'阿里地区',value:230},
-		{name:'日喀则地区',value:210},
-		{name:'林芝地区',value:215},
-		{name:'昌都地区',value:225},
-		{name:'山南地区',value:205},
-		{name:'拉萨市',value:235}]
+    dataRange: {
+      min : 203,
+      max : 237,
+      calculable : true,
+      color: ['skyblue', 'white'],
+      textStyle:{
+        color:'#1b1b1b'
+      }
+    },
+    series : [
+      {
+      name:'Data',
+      type:'map',
+      mapType: '西藏',
+      itemStyle:{
+      normal:{
+      borderColor:'rgba(100,149,237,1)',
+      borderWidth: 0.5,
+      label:{show:true,textStyle:{color:'#1b1b1b'}},
+      },
+      emphasis:{label:{show:true,textStyle:{color:'#1b1b1b'}}}
+    },
+    data:[{name:'那曲地区',value:220},
+  		{name:'阿里地区',value:230},
+  		{name:'日喀则地区',value:210},
+  		{name:'林芝地区',value:215},
+  		{name:'昌都地区',value:225},
+  		{name:'山南地区',value:205},
+  		{name:'拉萨市',value:235}]
 
 
-  }]
-};
-  myChart.setOption(options);	</script></p>
-</div>
-<div id="remapb" class="section level4">
-<h4><em>remapB</em>函数</h4>
-<pre class="r"><code>## 绘制地图
+    }]
+  };
+    myChart.setOption(options);	</script>
+
+#### *remapB*函数
+```r
+## 绘制地图
 p = remapB(markLineData = demoC)
 ## knitr展示
-knitrREmap(p)</code></pre>
-<p><div id="ID_20151027142225_154" style="height:300px; width:100%"></div>
+knitrREmap(p)
+```
+
+<div id="ID_20151027142225_154" style="height:300px; width:100%"></div>
 <script>
                 (function () {
                 require.config({
@@ -421,17 +434,21 @@ var myChart = BMapExt.initECharts(container);
                        BMapExt.setOption(option);
                        }
 );
-                       })();</script></p>
-</div>
-<div id="remaph" class="section level4">
-<h4><em>remapH</em>函数</h4>
-<p><code>remapH</code>函数是最近新写的,用于绘制热力图</p>
-<pre class="r"><code>## 绘制地图
+                       })();</script>
+
+
+#### *remapH*函数
+
+<code>remapH</code>函数是最近新写的,用于绘制热力图
+
+```r
+## 绘制地图
 plotdata = sampleData()
 p = remapH(plotdata)
 ## knitr展示
-knitrREmap(p,height = '500px')</code></pre>
-<p><div id="ID_20151027142225_165" style="height:500px; width:100%"></div>
+knitrREmap(p,height = '500px')
+```
+<div id="ID_20151027142225_165" style="height:500px; width:100%"></div>
 <script>  var myChart = echarts.init(document.getElementById("ID_20151027142225_165"));
   var heatData = [[105.889946753159,28.5720410645008,0.66391058312729],
 [113.821481289342,34.9896029606462,0.0757334851659834],
@@ -836,6 +853,4 @@ knitrREmap(p,height = '500px')</code></pre>
 
   }]
   };
-  myChart.setOption(options);	</script></p>
-</div>
-</div>
+  myChart.setOption(options);	</script>

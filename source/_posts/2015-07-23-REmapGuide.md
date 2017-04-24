@@ -1,7 +1,7 @@
 ---
 layout: post
 title: REmap使用手册V0.1
-tags: R
+categories: R
 date: 2015-07-23
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: "0.3.2版本新增的一些theme"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: R
+categories: R
 date: 2016-02-23
 ---
 

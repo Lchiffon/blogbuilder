@@ -2,7 +2,7 @@
 layout: post
 title: "你并不需要一个数据科学家(至少现在不需要)"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: 技术学习
+categories: 技术学习
 date: 2015-08-25
 ---
 

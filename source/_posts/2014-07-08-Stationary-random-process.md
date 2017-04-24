@@ -2,7 +2,6 @@
 layout: post
 title: 读书笔记:谱分析
 categories: 技术学习
-tags: 技术学习
 date: 2014-07-08
 ---
 

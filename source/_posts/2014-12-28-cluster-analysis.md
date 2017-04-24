@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 将聚类聚类
-tags: R
+categories: R
 date: 2014-12-28
 ---
 

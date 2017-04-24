@@ -2,7 +2,7 @@
 layout: post
 title: "南昌R语言会议slides"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: 幻灯片保存
+categories: 幻灯片保存
 date: 2015-10-25
 ---
 

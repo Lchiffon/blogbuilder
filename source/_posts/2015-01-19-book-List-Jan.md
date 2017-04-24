@@ -2,7 +2,7 @@
 layout: post
 title: 一月书单
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: 杂七杂八
+categories: 杂七杂八
 date: 2015-01-19
 ---
 

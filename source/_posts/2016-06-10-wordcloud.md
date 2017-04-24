@@ -1,6 +1,6 @@
 ---
 title: "Introdcution to Wordccloud2"
-tags: R
+categories: R
 date: 2016-06-10
 ---
 

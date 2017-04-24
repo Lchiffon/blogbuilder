@@ -2,7 +2,7 @@
 layout: post
 title: "快速撰写数据报告,preReport"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: R
+categories: R
 date: 2015-12-12
 ---
 

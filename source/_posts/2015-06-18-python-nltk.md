@@ -2,8 +2,7 @@
 layout: post
 title: Python 正则表达式
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-category: JsPy&Others
-tags: JsPy&Others
+categories: JsPy&Others
 date: 2015-06-18
 ---
 

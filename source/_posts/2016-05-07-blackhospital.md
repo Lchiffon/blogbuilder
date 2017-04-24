@@ -1,7 +1,7 @@
 ---
 title: "莆田医院的可视化(R)"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: R
+categories: R
 date: 2016-05-07
 ---
 

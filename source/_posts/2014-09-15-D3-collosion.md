@@ -2,7 +2,6 @@
 layout: post
 title: D3-collosion
 categories: JsPy&Others
-tags: JsPy&Others
 date: 2014-09-15
 ---
 <iframe  height="400px" width="95%">

@@ -2,7 +2,7 @@
 layout: post
 title: "R中的黑魔法--读取WORD文档中的表格"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
-tags: R
+categories: R
 date: 2015-08-26
 ---
 
