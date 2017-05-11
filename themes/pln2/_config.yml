@@ -1,0 +1,27 @@
+menu:
+  主页: /
+  归档: /archives
+
+logo: CHIFFON
+
+more:
+  友情链接: /link/index.html
+  Github: https://github.com/lchiffon/
+  微博: http://weibo.com/u/1625159840
+  知乎: https://www.zhihu.com/people/chiffon-lang/activities
+  rss: /rss2.xml
+  关于我: /about/index.html
+  请我喝杯咖啡: /coffee/index.html
+
+about:
+  title: Theme Pln
+  link: https://github.com/gaoryrt/hexo-theme-pln
+
+
+
+
+disqus_shortname:
+
+excerpt_num: 120
+
+footer_info: © Chiffon 2014-2017

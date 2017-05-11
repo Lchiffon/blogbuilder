@@ -1,0 +1,81 @@
+<% if(index){ %>
+<div>
+<li class="post-item">
+  <%- partial('post/title') %>
+  <div class="excerpt">
+  <% if (item.excerpt){ %>
+    <%- item.excerpt %>
+  <% } else { %>
+    <%- strip_html(item.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, theme.excerpt_num) %>
+  <% } %>
+  <a href="<%- config.root %><%- item.path %>">
+    <%= __("read_more") %>
+  </a>
+  </div>
+  <div class="index-meta">
+    <%- partial('post/meta', {item: item}) %>
+  </div>
+</li>
+</div>
+<hr>
+<% } else { %>
+
+  <article class="standard <%= item.layout %>">
+    <div class="title">
+      <%- partial('post/title') %>
+    </div>
+    <div class="meta center">
+      <%- partial('post/meta', {item: item}) %>
+    </div>
+    <hr>
+    <div class="picture-container">
+      <% if (item.photos && item.photos.length){ %>
+        <%- partial('post/gallery', {item: item}) %>
+      <% } %>
+    </div>
+    <%- item.content %>
+
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+  <!-- JiaThis Button BEGIN -->
+      <div class="jiathis_style_24x24" style = 'float:right'>
+        <a class="jiathis_button_qzone"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_tqq"></a>
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_renren"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+      </div>
+      <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+      <!-- JiaThis Button END -->
+
+  <!-- 多说评论框 start -->
+  <!-- <div class="ds-thread" data-thread-key="<%- item.title %>" data-title="<%- item.title %>" data-url="langdawei.com/<%- item.path %>"></div> -->
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <!-- <script type="text/javascript">
+  var duoshuoQuery = {short_name:"lchiffon"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+       || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script> -->
+  <!-- 多说公共JS代码 end -->
+
+<%- partial('post/comment') %>
+  <div class="busuanzi center">
+    <%= __("page_read") %>:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    <%= __("site_read") %>:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    <%= __("site_visitor") %>:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+<% } %>
