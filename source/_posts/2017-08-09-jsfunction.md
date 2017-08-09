@@ -2,7 +2,7 @@
 title: "如何不污染作用域"
 image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
 categories: R
-date: 2017-04-25
+date: 2017-08-09
 ---
 
 JS代码里面有个有趣的函数写法, 是把一个函数**定义好之后立即执行**, 这样函数内部的内容不会污染整个作用域(大概可以用这个词吧)
