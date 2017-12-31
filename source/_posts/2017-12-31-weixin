@@ -1,0 +1,367 @@
+---
+title: "R构件后台服务器"
+image: http://ww3.sinaimg.cn/large/005yyi5Jjw1eoerczxex0j30im08ltau.jpg
+categories: R
+date: 2017-12-31
+---
+
+这是一个R为微信后台做服务的项目，这个项目并不需要其他的公众号权限，只要个人的公众号权限就可以。
+
+
+
+
+项目地址： https://github.com/Lchiffon/Example-for-R-Weixin
+
+文件：
+
+Inception/
+api.R
+config.ini
+utils.R
+
+
+- Inception/ 
+  - 这里存储了一个深度学习的模型文件
+- api.R 
+  - 这里是后台的脚本
+- utils.R
+  - 这里存储了模型的执行文件
+
+
+
+## 接口部分
+
+这里是通过fiery包构建了后端的服务器，后台需要做的是把自己的服务器IP登记到微信的公众平台上， 登记之后运行这个服务，就可以开启整个服务了
+
+
+```r
+library(fiery)
+
+source('config.ini')
+
+source("utils.R")
+
+# Create a New App
+
+app <- Fire$new()
+
+app$host = IP
+
+app$port = port
+
+
+app$on('start', function(server, ...) {
+
+  server$set_data('visits', 0)
+
+  server$set_data('cycles', 0)
+
+})
+
+
+
+
+# Count the number of cycles (internal loops)
+
+app$on('cycle-start', function(server, ...) {
+
+  server$set_data('cycles', server$get_data('cycles') + 1)
+
+})
+
+
+
+
+# Count the number of requests
+
+app$on('before-request', function(server, ...) {
+
+  server$set_data('visits', server$get_data('visits') + 1)
+
+})
+
+
+
+
+# Handle requests
+
+app$on('request', function(server, request, ...) {
+
+
+
+  request$parse_raw()
+
+  message(request$as_message())
+
+  print(rawToChar(request$body))
+
+
+
+
+  msgXML = rawToChar(request$body)
+
+  ori = extractWeixin(msgXML, "ToUserName")
+
+  user = extractWeixin(msgXML, "FromUserName")
+
+  time = as.POSIXct(as.numeric(extractWeixin(msgXML, "CreateTime",F)),
+
+                    origin = "1970-01-01")
+
+  msgType = extractWeixin(msgXML, "MsgType")
+
+  content = extractWeixin(msgXML, "Content")
+
+  messageId =  extractWeixin(msgXML, "MsgId",F)
+
+  PicUrl = extractWeixin(msgXML, "PicUrl")
+
+  print(PicUrl)
+
+  # output = sprintf('"%s","%s","%s","%s","%s"\n',user,time,msgType,content,messageId)
+
+
+
+  response <- request$respond()
+
+  response$status <- 200L
+
+  #response$body <- paste0('<h1>This is indeed a test. You are number ', server$get_data('visits'), '</h1>')
+
+  
+
+  theQuery = request$query
+
+  # theQ <<- theQuery
+
+  if('echostr' %in% names(theQuery)){
+
+    
+
+    response$body = regmatches(request$querystring,
+
+                               gregexpr("(?<=echostr=).+(?=&t)",
+
+                                        request$querystring,
+
+                                        perl = TRUE))
+
+  }else{
+
+    print(123)
+
+    response$body = returnMsg(ori,user, time, msgType, content, messageId, PicUrl)
+
+  }
+
+  # cat(response$body)
+
+  # response$body <- 'success'
+
+  response$type <- 'html'
+
+})
+
+
+
+
+# Show number of requests in the console
+
+app$on('after-request', function(server, ...) {
+
+  #message(server$get_data('visits'))
+
+  flush.console()
+
+})
+
+
+# Be polite
+
+app$on('end', function(server) {
+
+  # sink()
+
+  #message('Goodbye')
+
+  flush.console()
+
+})
+
+
+app$ignite(showcase = TRUE)
+
+
+
+```
+
+
+## 函数部分
+
+函数部分这里主要有三个函数，它会自动被api.R调用：
+
+- extractWeixin
+  - 从微信发送的XML格式的消息中截取出需要的信息
+- showPic
+  - 一个深度学习的封包函数，返回最合适的类别
+- returnMsg
+  - 构建返回给微信的XML格式的函数
+
+```r
+# 微信数据截取函数
+
+extractWeixin = function(msgXML, pattern,CDATA = T){
+
+  if(CDATA)
+
+    regPattern = paste0("(?<=", pattern, "><\\!\\[CDATA\\[)[\\s\\S]+(?=\\]\\]></",
+
+                        pattern, ")")
+
+  else
+
+    regPattern = paste0("(?<=", pattern, ">).+(?=</",
+
+                        pattern, ")")
+
+  regmatches(msgXML,
+
+             gregexpr(regPattern,
+
+                      msgXML,
+
+                      perl = TRUE))[[1]]
+
+}
+
+if(!require(mxnet)){
+
+  install.packages("drat", repos="https://cran.rstudio.com")
+
+  drat:::addRepo("dmlc")
+
+  install.packages("mxnet")
+
+}
+
+
+
+
+library(mxnet)
+
+library(imager)
+
+# 载入模型
+
+model = mx.model.load("Inception/Inception_BN", iteration=39)
+
+# 载入mean image
+
+mean.img = as.array(mx.nd.load("Inception/mean_224.nd")[["mean_img"]])
+
+
+
+
+im <- load.image(system.file("extdata/parrots.png", package = "imager"))
+
+plot(im)
+
+preproc.image <- function(im, mean.image) {
+
+  # crop the image
+
+  shape <- dim(im)
+
+  short.edge <- min(shape[1:2])
+
+  xx <- floor((shape[1] - short.edge) / 2)
+
+  yy <- floor((shape[2] - short.edge) / 2)
+
+  cropped <- crop.borders(im, xx, yy)
+
+  # resize to 224 x 224, needed by input of the model.
+
+  resized <- resize(cropped, 224, 224)
+
+  # convert to array (x, y, channel)
+
+  arr <- as.array(resized) * 255
+
+  dim(arr) <- c(224, 224, 3)
+
+  # subtract the mean
+
+  normed <- arr - mean.img
+
+  # Reshape to format needed by mxnet (width, height, channel, num)
+
+  dim(normed) <- c(224, 224, 3, 1)
+
+  return(normed)
+
+}
+
+normed <- preproc.image(im, mean.img)
+
+
+
+
+prob <- predict(model, X=normed)
+
+max.idx <- max.col(t(prob))
+
+synsets <- readLines("Inception/synset.txt")
+
+print(paste0("Predicted Top-class: ", synsets[[max.idx]]))
+
+
+
+
+showPic = function(input){
+
+  cat <- load.image(input)
+
+  # plot(cat)
+
+  normed <- preproc.image(cat, mean.img)
+
+  prob <- predict(model, X=normed)
+
+  max.idx <- max.col(t(prob))
+
+  print(paste0("Predicted Top-class: ", synsets[[max.idx]]))
+
+  output = strsplit(synsets[[max.idx]]," ")[[1]]
+
+  output[1] = ''
+
+  return(paste(output,collapse=" "))
+
+}
+
+returnMsg = function(ori,user, time, msgType, content, messageId,PicUrl){
+
+  if(length(PicUrl)==0){
+
+    cat(234)
+
+    return('success')
+
+  }
+
+  cat(123)
+  filename = paste0("data/",format(Sys.time(),"%Y%m%d%M"))
+
+  download.file(PicUrl,destfile = filename)
+  output = sprintf("<xml>
+    <ToUserName><![CDATA[%s]]></ToUserName>
+    <FromUserName><![CDATA[%s]]></FromUserName>
+    <CreateTime>%s</CreateTime>
+    <MsgType><![CDATA[text]]></MsgType>
+    <Content><![CDATA[介尼玛似一个%s]]></Content>
+    </xml>",user,ori,as.numeric(Sys.time()),showPic(filename))
+  return(output)
+}
+
+```
